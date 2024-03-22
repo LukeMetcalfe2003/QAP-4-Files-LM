@@ -1,5 +1,3 @@
-# QAP-4-Files-LM
-
 # Description: Program for One Stop Insurance Company to calculate new insurance policy information for its customers
 # Author: Luke Metcalfe
 # Date: March 14, 2024
@@ -98,12 +96,7 @@ def CustomerClaims():
                 break
         if Continue == "N":
             break
-        
-   
-   
-
-
-
+         
 # Main program
 
 while True:
@@ -169,7 +162,7 @@ while True:
 
     allowed_postal_code_char =("ABCDEFGHIJKLMNOPQRSTUVWXZY 1234567890")
     while True:
-        PostalCode = input("Enter the customers postal code (L9L 9L9): ")
+        PostalCode = input("Enter the customers postal code (L9L9L9): ")
 
         if PostalCode == "":
             print("Data Entry Error - customer postal code cannot be blank.")
@@ -238,34 +231,34 @@ while True:
     #Perform required calculations
     if NumCarsIns == 1:
         InsurPremium = BASIC_PREM
-    elif NumCarsIns > 1:
-        InsurPremium = BASIC_PREM * ADD_CAR_DIS
+    else:
+        InsurPremium = BASIC_PREM + (NumCarsIns - 1) * (BASIC_PREM * (1 - ADD_CAR_DIS))
 
     ExtraLibilityCost = 0
     if ExtraLibility == "Y":
-        ExtraLibilityCost = EXTRA_LIBILITY_COV
-    
+        ExtraLibilityCost = EXTRA_LIBILITY_COV * NumCarsIns
+
     GlassCoverageCost = 0
     if GlassCoverage == "Y":
-        GlassCoverageCost = GLASS_COV
-    
+        GlassCoverageCost = GLASS_COV * NumCarsIns
+
     LoanerCarCost = 0
     if LoanerCar == "Y":
-        LoanerCarCost = LOAN_CAR_RATE
+        LoanerCarCost = LOAN_CAR_RATE * NumCarsIns
 
     TotExtraCost = ExtraLibilityCost + GlassCoverageCost + LoanerCarCost
 
-    TotInsurPremium = BASIC_PREM + TotExtraCost
+    TotInsurPremium = InsurPremium + TotExtraCost 
 
     HST = TotInsurPremium * HST_RATE
 
     TotalCost = TotInsurPremium + HST
 
     if PaymentMethod == "Down Payment":
-        MonthlyPayment = (TotalCost - DownPaymentAmt) + PROCESSING_FEE / 8
+        MonthlyPayment = (TotalCost - DownPaymentAmt) / 8 + PROCESSING_FEE 
     else:
         MonthlyPayment = (PROCESSING_FEE + TotalCost) / 8
-    
+
     
 
     # Display Results 
@@ -312,7 +305,7 @@ while True:
     print(" -----------------------------------------")
     print(f" Claim #  Claim Date                Amount")
     for i in range(len(ClaimNumLst)):
-        print(f" {ClaimNumLst[i]:<4d}    {FV.FDateSQAP4(ClaimDateLst[i]):>10s}            {FV.FDollar2(ClaimAmtLst[i]):>10s}")
+        print(f" {ClaimNumLst[i]:<4d}     {FV.FDateSQAP4(ClaimDateLst[i]):>10s}            {FV.FDollar2(ClaimAmtLst[i]):>10s}")
 
     
     print()
@@ -380,3 +373,117 @@ f.close()
 print()
 
 print("Thanks for using the One Stop Insurance insurance policy program!")
+
+
+# FormatValues.Py
+
+import datetime
+
+
+def FDollar2(DollarValue):
+    # Function will accept a value and format it to $#,###.##.
+
+    DollarValueStr = "${:,.2f}".format(DollarValue)
+
+    return DollarValueStr
+
+
+def FDollar0(DollarValue):
+    # Function will accept a value and format it to $#,###.##.
+
+    DollarValueStr = "${:,.0f}".format(DollarValue)
+
+    return DollarValueStr
+
+
+def FComma2(Value):
+    # Function will accept a value and format it to $#,###.##.
+
+    ValueStr = "{:,.2f}".format(Value)
+
+    return ValueStr
+
+
+def FComma0(Value):
+    # Function will accept a value and format it to $#,###.##.
+
+    ValueStr = "{:,.0f}".format(Value)
+
+    return ValueStr
+
+
+def FNumber0(Value):
+    # Function will accept a value and format it to $#,###.##.
+
+    ValueStr = "{:.0f}".format(Value)
+
+    return ValueStr
+
+
+def FNumber1(Value):
+    # Function will accept a value and format it to $#,###.##.
+
+    ValueStr = "{:.1f}".format(Value)
+
+    return ValueStr
+
+
+def FNumber2(Value):
+    # Function will accept a value and format it to $#,###.##.
+
+    ValueStr = "{:.2f}".format(Value)
+
+    return ValueStr
+
+
+def FDateS(DateValue):
+    # Function will accept a value and format it to yyyy-mm-dd.
+
+    DateValueStr = DateValue.strftime("%Y-%m-%d")
+
+    return DateValueStr
+
+
+def FDateM(DateValue):
+    # Function will accept a value and format it to dd-Mon-yy.
+
+    DateValueStr = DateValue.strftime("%d-%b-%y")
+
+    return DateValueStr
+
+
+def FDateL(DateValue):
+    # Function will accept a value and format it to Day, Month dd, yyyy.
+
+    DateValueStr = DateValue.strftime("%A, %B %d, %Y")
+
+    return DateValueStr
+
+def FDateSQAP4(DateValue):
+    if isinstance(DateValue, str):
+        DateValue = datetime.datetime.strptime(DateValue, "%Y-%m-%d")
+    return DateValue.strftime("%Y-%m-%d")
+
+
+# Def.dat
+
+1949
+869.0
+0.25
+130.0
+86.0
+58.0
+0.15
+39.99
+
+
+# Claims.dat
+
+
+2024-03-21 20:28:09.053931, 90 Sweetenwater Crescent, Luke Metcalfe, St. John'S, NL, A1W4T3, 1, Y
+Y
+N
+Full
+0
+869.0
+1085.0
